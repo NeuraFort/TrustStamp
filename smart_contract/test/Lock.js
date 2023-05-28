@@ -1,28 +1,56 @@
+// Import the required modules
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
-describe("TrustStamp", function () {
-  let trustStamp;
+// Describe the ProductRegistry contract tests
+describe("ProductRegistry", function () {
+  let ProductRegistry;
+  let productRegistry;
   let owner;
-  let user1;
+  let user;
+  let productId;
+  let serialNumber;
 
+  // Deploy the contract before each test
   beforeEach(async function () {
-    const TrustStamp = await ethers.getContractFactory("TrustStamp");
-    [owner, user1] = await ethers.getSigners();
-    trustStamp = await TrustStamp.deploy();
-    await trustStamp.deployed();
+    // Deploy the ProductRegistry contract
+    ProductRegistry = await ethers.getContractFactory("ProductRegistry");
+    productRegistry = await ProductRegistry.deploy();
+    await productRegistry.deployed();
+
+    // Set the owner and user addresses
+    [owner, user] = await ethers.getSigners();
+
+    // Assign a product serial number
+    serialNumber = "ABC123";
   });
 
-  it("should register a new product", async function () {
-    const serialNumber = "ABC123";
+  // Test the product registration
+  it("should register a product", async function () {
+    // Call the registerProduct function
+    await productRegistry.registerProduct(serialNumber, owner.address);
+    // Get the product ID
+    productId = await productRegistry.getProductId(serialNumber);
 
-    await trustStamp.connect(user1).registerProduct(serialNumber);
-
-    const products = await trustStamp.registeredProducts(user1.address);
-
-    expect(products.length).to.equal(1);
-    expect(products[0].productId).to.equal(1);
-    expect(products[0].serialNumber).to.equal(serialNumber);
+    // Verify the product details
+    const product = await productRegistry.getProduct(productId);
+    expect(product.serialNumber).to.equal(serialNumber);
+    expect(product.owner).to.equal(owner.address);
   });
 
-  // Add more test cases as needed
+  // Test the product verification
+  it("should verify a product", async function () {
+    // Register a product
+    await productRegistry.registerProduct(serialNumber, owner.address);
+
+    // Get the product ID
+    productId = await productRegistry.getProductId(serialNumber);
+
+    // Call the verifyProduct function
+    await productRegistry.verifyProduct(productId, owner.address);
+
+    // Get the product details after verification
+    const product = await productRegistry.getProduct(productId);
+    expect(product.verified).to.equal(true);
+  });
 });
