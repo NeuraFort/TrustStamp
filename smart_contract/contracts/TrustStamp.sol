@@ -1,37 +1,37 @@
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.18;
 
-contract TrustStamp {
-    struct Product {
-        uint256 productId;
-        string serialNumber;
-        // Add more fields as needed
+import "./ProductRegistry.sol";
+import "./UserRegistry.sol";
+import "./AccessControl.sol";
+
+contract TrustStamp is AccessControl {
+    ProductRegistry private productRegistry;
+    UserRegistry private userRegistry;
+    uint256 productId;
+
+    event ProductRegistered(uint256 indexed productId, string indexed serialNumber, address indexed user);
+    event ProductVerified(uint256 indexed productId, address indexed user);
+
+    constructor(ProductRegistry _productRegistry, UserRegistry _userRegistry) {
+        productRegistry = _productRegistry;
+        userRegistry = _userRegistry;
     }
-    
-    mapping(address => Product[]) private registeredProducts;
-    uint256 private productIdCounter;
-    
-    event ProductRegistered(address indexed user, uint256 productId, string serialNumber);
-    
-    constructor() {
-        productIdCounter = 1; // Initialize the product ID counter
+
+    function registerProduct(string calldata serialNumber) external {
+        /**productId = productRegistry.registerProduct(serialNumber, msg.sender);
+        userRegistry.registerProductForUser(productId, msg.sender);
+        emit ProductRegistered(productId, serialNumber, msg.sender);**/
     }
-    
-    function registerProduct(string memory _serialNumber) public {
-        // Generate a unique product ID
-        uint256 productId = productIdCounter;
-        productIdCounter++; // Increment the counter for the next product
-        
-        // Create a new product instance
-        Product memory newProduct = Product(productId, _serialNumber);
-        
-        // Add the product to the registeredProducts mapping for the sender
-        registeredProducts[msg.sender].push(newProduct);
-        
-        emit ProductRegistered(msg.sender, productId, _serialNumber);
+
+    function verifyProduct(uint256 productId) external {
+        bool success = productRegistry.verifyProduct(productId, msg.sender);
+        require(success, "Product verification failed");
+        emit ProductVerified(productId, msg.sender);
     }
-    
-    // Other functions and modifiers...
+
+    function getUserProducts() external view returns (uint256[] memory) {
+        return userRegistry.getUserProducts(msg.sender);
+    }
 }
-
