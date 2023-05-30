@@ -1,11 +1,12 @@
 TrustStamp: Ensuring Authenticity and Building Trust through Blockchain Technology
 
 
-TrustStamp, created and developed by NeuraFort, is a blockchain-based authenticity verification platform 
-designed to combat counterfeiting and establish trust in product authenticity. Leveraging the immutable 
-and transparent nature of blockchain, TrustStamp provides a reliable and tamper-proof method for verifying 
-the integrity and origin of products. This whitepaper outlines the key features, technical aspects, and 
-benefits of TrustStamp.
+TrustStamp, developed and maintained by NeuraFort, is a decentralized platform built on the Binance Smart Chain (BSC) that provides a reliable and tamper-proof solution 
+for product authenticity verification. By leveraging the power of blockchain and the Practical Byzantine Fault Tolerance (PBFT) consensus algorithm, TrustStamp ensures the 
+integrity and immutability of product data. The platform incorporates a decentralized identity verification system, allowing only verified users to participate in the 
+product verification process.
+
+
 
 1. Introduction:
 

@@ -20,6 +20,7 @@ contract ProductRegistry {
     event ProductVerified(uint256 indexed productId, address verifier);
 
     function registerProduct(string memory serialNumber, address owner) external returns (uint256) {
+
         productIdCounter++;
         uint256 productId = productIdCounter;
         uint256 timestamp = block.timestamp;
@@ -44,5 +45,6 @@ contract ProductRegistry {
     function getProductId(string memory serialNumber) public view returns (uint256) {
         return productIds[serialNumber];
     }
+
 
 }
