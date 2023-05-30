@@ -20,15 +20,15 @@ contract TrustStamp is AccessControl {
     }
 
     function registerProduct(string calldata serialNumber) external {
-        /**productId = productRegistry.registerProduct(serialNumber, msg.sender);
+        productId = productRegistry.registerProduct(serialNumber, msg.sender);
         userRegistry.registerProductForUser(productId, msg.sender);
-        emit ProductRegistered(productId, serialNumber, msg.sender);**/
+        emit ProductRegistered(productId, serialNumber, msg.sender);
     }
 
-    function verifyProduct(uint256 productId) external {
-        bool success = productRegistry.verifyProduct(productId, msg.sender);
+    function verifyProduct(uint256 checkId) external {
+        bool success = productRegistry.verifyProduct(checkId, msg.sender);
         require(success, "Product verification failed");
-        emit ProductVerified(productId, msg.sender);
+        emit ProductVerified(checkId, msg.sender);
     }
 
     function getUserProducts() external view returns (uint256[] memory) {
